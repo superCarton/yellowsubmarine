@@ -31,6 +31,7 @@ int masseVolumiqueEau=1000;
 //masse d'eau déplacée
 double mf=volume*masseVolumiqueEau;
 double g=9.8; // pesanteur terre en m/sÂ² 
+double g=10; // pesanteur terre en m/sÂ² 
 //Poussé Archimède
 double PA=mf*g;
 int mvide= 9999000; // masse Ã  vide (kg)
@@ -40,6 +41,8 @@ double mbalastMax= 2000.0;
 double mtotal=mvide+mbalast;
 double poids=mtotal*g;
 double f=1; //Frottement
+double poids=mtotal*g; 
+double frottement=1; //Frottement
 double Ph = 0;
 double Pv = (int)(PA - poids);
 // obstacles
@@ -55,6 +58,11 @@ double[][] Bd = {{0.080008*10*exp(-9),0}
                   ,{4.0004*10*exp(-9),0}
                    ,{0,0.080008*10*exp(-9)}
                     ,{0,4.0004*10*exp(-9)}};
+double[][] Ad = {{1,0.0362535,0,0},{0,0.8187144,0,0},{0,0,1,0.0362535},{0,0,0,0.8187144}};
+double[][] Bd = {{0.0749300*10*exp(-9),0}
+                  ,{3.6257125*10*exp(-9),0}
+                   ,{0,0.0749300*10*exp(-9)}
+                    ,{0,3.6257125*10*exp(-9)}};
 
 void setup(){
   
@@ -118,6 +126,8 @@ void nouvelEtat(){
     Xn[i] += v;
   }
   
+  println(" PV :" + Pv);
+  
   if (Xn[2]>(-tciel)) {
     Xn[2] = -tciel;
     Xn[3] = 0;
@@ -133,6 +143,8 @@ void nouvelEtat(){
   print("X : " + (int)Xn[0] + " ; X. = " + (int)Xn[1] + " ; Y = " + (int)Xn[2] + " ; Y. = " + (int)Xn[3] + " --- ");
   print("MBalast : " + mbalast + " ; VRemplissageBalast = " + vremplissagebalast);
   print("Poids : " + Pv);
+  print("Xn[3] : " + Xn[3]);
+  print(";   M balast : " + mbalast);
   println();
   
 }
@@ -195,10 +207,12 @@ void down(){
 
 void right(){
  // x++;
+ Ph+=(50.0/(double)fps);
 }
 
 void left(){
   //x--;
+  Ph-=(50.0/(double)fps);
 }
 
 void space(){
